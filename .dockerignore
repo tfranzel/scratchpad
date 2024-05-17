@@ -1,0 +1,13 @@
+docker/.env
+.mypy_cache
+.pytest_cache
+.git
+.github
+.idea
+/database
+/frontend
+/static
+/systemd
+/data
+/dump*
+deploy.yml

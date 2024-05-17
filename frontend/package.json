@@ -1,0 +1,48 @@
+{
+  "name": "scratchpad",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "run-p type-check \"build-only {@}\" --",
+    "preview": "vite preview",
+    "test:e2e": "start-server-and-test preview http://localhost:4173 'cypress run --e2e'",
+    "test:e2e:dev": "start-server-and-test 'vite dev --port 4173' http://localhost:4173 'cypress open --e2e'",
+    "test:unit": "cypress run --component",
+    "test:unit:dev": "cypress open --component",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --build --force",
+    "generate-pwa-assets": "pwa-assets-generator"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "bitset": "^5.1.1",
+    "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
+    "dropzone": "^6.0.0-beta.2",
+    "file-saver": "^2.0.5",
+    "monaco-editor": "^0.48.0",
+    "pinia": "^2.2.2",
+    "vue": "^3.4.38",
+    "vue-router": "^4.4.3"
+  },
+  "devDependencies": {
+    "@tsconfig/node20": "^20.1.4",
+    "@types/bootstrap": "^5.2.10",
+    "@types/dropzone": "^5.7.8",
+    "@types/file-saver": "^2.0.7",
+    "@types/node": "^20.12.5",
+    "@vite-pwa/assets-generator": "^0.2.4",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "@vue/tsconfig": "^0.5.1",
+    "cypress": "^13.7.2",
+    "npm-run-all2": "^6.1.2",
+    "sass": "1.77.6",
+    "start-server-and-test": "^2.0.3",
+    "typescript": "~5.4.0",
+    "vite": "^5.2.8",
+    "vite-plugin-pwa": "^0.20.0",
+    "vue-tsc": "^2.0.11"
+  }
+}

@@ -1,0 +1,72 @@
+- name: Scratchpad
+  hosts: all
+  remote_user: root
+  tasks:
+    - name: update source
+      tags: BE
+      ansible.posix.synchronize:
+        src: ./
+        dest: /var/www/scratchpad/
+        owner: no
+        group: no
+        rsync_opts:
+          - "--no-motd"
+          - "--exclude=.git"
+          - "--exclude=.gitignore"
+          - "--exclude=.idea"
+          - "--exclude=docker/.env"
+          - "--exclude=data"
+          - "--exclude=static"
+          - "--exclude=__pycache__"
+          - "--exclude=.pytest_cache/"
+          - "--exclude=.mypy_cache/"
+          - "--exclude=frontend/"
+
+    - name: create systemd service
+      tags: BE
+      ansible.builtin.file:
+        src: /var/www/scratchpad/docker/{{ item }}
+        dest: /etc/systemd/system/{{ item }}
+        state: link
+      loop:
+        - scratchpad.service
+
+    - name: enable systemd service
+      tags: BE
+      ansible.builtin.systemd:
+        name: scratchpad.service
+        state: started
+        enabled: yes
+        daemon_reload: yes
+
+    - name: build backend docker containers
+      tags: BE
+      ansible.builtin.command: docker compose build --pull
+      args:
+        chdir: /var/www/scratchpad/
+      environment:
+        DOCKER_BUILDKIT: 1
+        COMPOSE_DOCKER_CLI_BUILD: 1
+        COMPOSE_PROJECT_NAME: scratchpad
+        COMPOSE_FILE: docker/docker-compose.yml
+
+    - name: update backend
+      tags: BE
+      ansible.builtin.systemd:
+        name: scratchpad.service
+        state: reloaded
+
+    - name: build frontend (locally)
+      tags: FE
+      local_action: ansible.builtin.command ./build-frontend.sh
+
+    - name: update frontend
+      tags: FE
+      ansible.posix.synchronize:
+        src: ./frontend/dist/
+        dest: /var/www/scratchpad/frontend/dist
+        owner: no
+        group: no
+        rsync_opts:
+          - "--no-motd"
+          - "--exclude=.git"

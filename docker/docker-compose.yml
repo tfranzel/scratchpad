@@ -1,0 +1,19 @@
+services:
+  nginx:
+    image: nginx
+    volumes:
+      - ./nginx-server.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx-default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ../frontend/dist:/var/www/scratchpad/frontend/dist:ro
+    ports:
+      - "8003:8003"
+    depends_on:
+      - backend
+  backend:
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    environment:
+      - SCRATCHPAD_ADMIN_BEARER
+    volumes:
+      - ../data:/app/data

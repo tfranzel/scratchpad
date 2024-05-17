@@ -1,0 +1,20 @@
+[Unit]
+Description=scratchpad
+After=docker.service
+Requires=docker.service
+
+[Service]
+WorkingDirectory=/var/www/scratchpad
+Environment="DOCKER_BUILDKIT=1"
+Environment="COMPOSE_DOCKER_CLI_BUILD=1"
+Environment="COMPOSE_PROJECT_NAME=scratchpad"
+ExecStartPre=/usr/bin/docker compose -f docker/docker-compose.yml build
+ExecStart=/usr/bin/docker compose -f docker/docker-compose.yml up
+ExecReload=/usr/bin/docker compose -f docker/docker-compose.yml up -d
+ExecStop=/usr/bin/docker compose -f docker/docker-compose.yml down
+Restart=always
+KillSignal=SIGQUIT
+NotifyAccess=all
+
+[Install]
+WantedBy=multi-user.target

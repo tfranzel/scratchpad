@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "scratchpad"
+version = "0.1.0"
+description = ""
+authors = ["T. Franzel <tfranzel@users.noreply.github.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = {extras = ["standard"], version = "^0.112.2"}
+websockets = "^13.0.1"
+uvicorn = {extras = ["standard"], version = "^0.30.0"}
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.2"
+mypy = "^1.11.2"
+ruff = "^0.6.3"
+
+[tool.ruff]
+line-length = 100
+
+[tool.mypy]
+strict = true
+
+[[tool.mypy.overrides]]
+module = ["tests.*"]
+check_untyped_defs = true
+disallow_untyped_defs = false
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
